@@ -12,8 +12,9 @@ public class BattleHandler {
   public static void CharacterChoice(GladiatorClient gladiatorClient, BaseRequest baseRequest,
       String json) {
     Gladiator gladiator = JsonUtils.fromString(json, CharacterRequest.class).data;
-    gladiatorClient.cloneGladiator(gladiator);
+    gladiatorClient.setGladiator(gladiator);
     Arena arena = gladiatorClient.getArena();
+    arena.setGladiator(gladiator);
     if (arena.isReady()) {
       arena.startBattle();
     }

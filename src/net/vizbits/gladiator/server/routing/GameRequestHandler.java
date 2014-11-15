@@ -42,7 +42,7 @@ public class GameRequestHandler {
         // game cancelled, tell waiting person
         return;
       }
-      Arena arena = new Arena(gladiatorClient.getGladiator(), opponentClient.getGladiator());
+      Arena arena = new Arena(username, opponent);
       gladiatorClient.setArena(arena);
       opponentClient.setArena(arena);
       gladiatorClient.setClientState(ClientState.Battle);
