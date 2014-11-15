@@ -43,7 +43,9 @@ public class GladiatorClient extends Thread {
   }
 
   private boolean init() {
-    LoginRequest loginRequest = JsonUtils.readFromSocket(in, LoginRequest.class);
+    String json = JsonUtils.readFromSocket(in);
+
+    LoginRequest loginRequest = JsonUtils.fromString(json, LoginRequest.class);
     if (loginRequest == null || loginRequest.getUsername() == null) {
       close();
       return false;
@@ -67,7 +69,6 @@ public class GladiatorClient extends Thread {
     }
     JsonUtils.writeToSocket(out, new LoginResponse(true, null));
     this.clientState = ClientState.Ready;
-    this.gladiator = new Gladiator();
     return true;
   }
 
@@ -81,13 +82,14 @@ public class GladiatorClient extends Thread {
     isAlive = true;
     while (isAlive) {
       try {
-        BaseRequest baseRequest = JsonUtils.readFromSocket(in, BaseRequest.class);
+        String json = JsonUtils.readFromSocket(in);
+        BaseRequest baseRequest = JsonUtils.fromString(json, BaseRequest.class);
         if (baseRequest == null)
           break;
         if (baseRequest.getAction() == null)
           continue;
         // do stuff
-        Router.route(baseRequest.getAction(), this, baseRequest);
+        Router.route(baseRequest.getAction(), this, baseRequest, json);
 
       } catch (ActionDoesNotExistException e) {
         LogUtils.logError(e);
@@ -111,6 +113,7 @@ public class GladiatorClient extends Thread {
   public void disconnect() {
     clientService.removeClient(username);
     close();
+
 
   }
 
@@ -137,6 +140,11 @@ public class GladiatorClient extends Thread {
 
   public Gladiator getGladiator() {
     return gladiator;
+  }
+
+  public void setGladiator(Gladiator gladiator) {
+    this.gladiator = gladiator;
+    gladiator.name = username;
   }
 
   public Arena getArena() {

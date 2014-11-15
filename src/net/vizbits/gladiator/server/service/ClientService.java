@@ -15,10 +15,12 @@ public class ClientService {
   }
 
   public void addClient(GladiatorClient client) throws AlreadyConnectedException {
-    String username = client.getUsername();
-    if (clientsList.containsKey(username))
-      throw new AlreadyConnectedException(username);
-    clientsList.put(username, client);
+    synchronized (clientsList) {
+      String username = client.getUsername();
+      if (clientsList.containsKey(username))
+        throw new AlreadyConnectedException(username);
+      clientsList.put(username, client);
+    }
   }
 
   public boolean usernameAvailable(String username) {
@@ -31,17 +33,30 @@ public class ClientService {
 
   public GladiatorClient findGladiatorByName(String username)
       throws GladiatorMissingInActionException {
-    GladiatorClient client = clientsList.get(username);
+    GladiatorClient client = null;
+    synchronized (clientsList) {
+      client = clientsList.get(username);
+    }
     if (client == null)
       throw new GladiatorMissingInActionException(username);
     return client;
   }
 
   public void removeClient(String username) {
-    clientsList.remove(username);
+    synchronized (clientsList) {
+      clientsList.remove(username);
+    }
+
   }
 
   public void removeClient(GladiatorClient client) {
     removeClient(client.getUsername());
+  }
+
+  public Integer size() {
+    synchronized (clientsList) {
+      return clientsList.size();
+    }
+
   }
 }

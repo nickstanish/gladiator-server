@@ -24,7 +24,7 @@ public class JsonUtils {
     return gson;
   }
 
-  public static <T> T fromHttpEntity(String entity, Class<T> type) {
+  public static <T> T fromString(String entity, Class<T> type) {
     T object;
     object = getGson().fromJson(entity, type);
     return object;
@@ -37,11 +37,11 @@ public class JsonUtils {
   public static void writeToSocket(PrintWriter out, Object object) {
     out.print(toJsonString(object));
     out.print(Constants.HTTP_SEPARATOR_STRING);
+    System.out.println("OUT:" + toJsonString(object));
     out.flush();
   }
 
-  public static <T> T readFromSocket(BufferedReader in, Class<T> type) {
-    T object;
+  public static String readFromSocket(BufferedReader in) {
     StringBuilder builder = new StringBuilder();
     int curr;
     int[] search = {'\0', '\0', '\0', '\0'};
@@ -59,10 +59,10 @@ public class JsonUtils {
       e.printStackTrace();
       return null;
     }
-    System.out.println("\"" + builder.toString() + "\"");
+    String output = builder.toString().replaceAll("[\r\n]", "").trim();
+    System.out.println("IN: '" + output + "'");
 
-    object = getGson().fromJson(builder.toString().replaceFirst("\r\n\r\n$", ""), type);
-    return object;
+    return output;
   }
 
   public static boolean matches(int[] from, int[] to) {
