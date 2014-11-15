@@ -1,4 +1,4 @@
-package routing;
+package net.vizbits.gladiator.server.routing;
 
 import net.vizbits.gladiator.server.GladiatorClient;
 import net.vizbits.gladiator.server.game.Arena;
@@ -12,9 +12,8 @@ public class BattleHandler {
   public static void CharacterChoice(GladiatorClient gladiatorClient, BaseRequest baseRequest,
       String json) {
     Gladiator gladiator = JsonUtils.fromString(json, CharacterRequest.class).data;
-    gladiatorClient.setGladiator(gladiator);
+    gladiatorClient.cloneGladiator(gladiator);
     Arena arena = gladiatorClient.getArena();
-    arena.setGladiator(gladiator);
     if (arena.isReady()) {
       arena.startBattle();
     }
@@ -29,7 +28,7 @@ public class BattleHandler {
     Gladiator me = gladiatorClient.getGladiator();
     Arena arena = gladiatorClient.getArena();
     Gladiator foe = arena.getFoe(me);
-    if (arena.isMyTurn(me)) {
+    if (arena.isMyTurn(me) && baseRequest.getData() != null) {
       arena.applyAttack(me, foe, (double) baseRequest.getData());
       arena.swapTurns();
     }

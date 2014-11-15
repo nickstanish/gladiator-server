@@ -6,16 +6,13 @@ import net.vizbits.gladiator.server.utils.LogUtils;
 public class Arena {
   private Gladiator team1;
   private Gladiator team2;
-  private Boolean ready;
   private Gladiator turn;
   private Boolean started;
-  private String username1;
-  private String username2;
 
-  public Arena(String username1, String username2) {
-    this.username1 = username1;
-    this.username2 = username2;
-    ready = false;
+
+  public Arena(Gladiator team1, Gladiator team2) {
+    this.team1 = team1;
+    this.team2 = team2;
     started = false;
   }
 
@@ -24,31 +21,18 @@ public class Arena {
     started = true;
   }
 
-  public boolean isMyTurn(Gladiator gladiator) {
+  public boolean isMyTurn(Gladiator me) {
     if (!started)
       return false;
-    return gladiator.name.equals(turn.name);
+    return turn.equals(me);
   }
 
   public boolean isReady() {
-    if (team1 != null && team2 != null) {
-      ready = true;
-    }
-    return ready;
-  }
-
-  public synchronized void setGladiator(Gladiator gladiator) {
-    LogUtils.logInfo("Assing gladiator '" + gladiator.name + "' to arena");
-    if (gladiator.name.equals(username1)) {
-      team1 = gladiator;
-    } else {
-      team2 = gladiator;
-    }
-
+    return started;
   }
 
   public Gladiator getFoe(Gladiator me) {
-    if (me.name.equals(username1)) {
+    if (me.equals(team1)) {
       return team2;
     } else {
       return team1;
@@ -68,10 +52,11 @@ public class Arena {
   }
 
   public void swapTurns() {
-    if (turn.equals(team1))
+    if (turn.equals(team1)) {
       turn = team2;
-    else
+    } else {
       turn = team1;
+    }
 
   }
 }

@@ -13,10 +13,10 @@ import net.vizbits.gladiator.server.game.Gladiator;
 import net.vizbits.gladiator.server.request.BaseRequest;
 import net.vizbits.gladiator.server.request.LoginRequest;
 import net.vizbits.gladiator.server.response.LoginResponse;
+import net.vizbits.gladiator.server.routing.Router;
 import net.vizbits.gladiator.server.service.ClientService;
 import net.vizbits.gladiator.server.utils.JsonUtils;
 import net.vizbits.gladiator.server.utils.LogUtils;
-import routing.Router;
 
 public class GladiatorClient extends Thread {
   private Socket socket;
@@ -36,6 +36,7 @@ public class GladiatorClient extends Thread {
     this.waitingQueue = waitingQueue;
     this.socket = socket;
 
+    this.gladiator = new Gladiator();
     out = new PrintWriter(socket.getOutputStream(), true);
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
@@ -142,10 +143,13 @@ public class GladiatorClient extends Thread {
     return gladiator;
   }
 
-  public void setGladiator(Gladiator gladiator) {
-    this.gladiator = gladiator;
-    gladiator.name = username;
-    gladiator.current_hp = gladiator.max_hp;
+  public void cloneGladiator(Gladiator clone) {
+    this.gladiator = clone;
+    this.gladiator.name = username;
+    this.gladiator.max_hp = clone.max_hp;
+    this.gladiator.current_hp = clone.max_hp;
+    this.gladiator.character_class = clone.character_class;
+    this.gladiator.attack = clone.attack;
   }
 
   public Arena getArena() {

@@ -1,4 +1,4 @@
-package routing;
+package net.vizbits.gladiator.server.routing;
 
 import net.vizbits.gladiator.server.ClientState;
 import net.vizbits.gladiator.server.GladiatorClient;
@@ -42,7 +42,7 @@ public class GameRequestHandler {
         // game cancelled, tell waiting person
         return;
       }
-      Arena arena = new Arena(username, opponent);
+      Arena arena = new Arena(gladiatorClient.getGladiator(), opponentClient.getGladiator());
       gladiatorClient.setArena(arena);
       opponentClient.setArena(arena);
       gladiatorClient.setClientState(ClientState.Battle);

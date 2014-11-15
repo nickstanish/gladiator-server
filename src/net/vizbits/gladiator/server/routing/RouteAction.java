@@ -1,4 +1,4 @@
-package routing;
+package net.vizbits.gladiator.server.routing;
 
 import net.vizbits.gladiator.server.GladiatorClient;
 import net.vizbits.gladiator.server.request.BaseRequest;

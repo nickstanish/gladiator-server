@@ -1,4 +1,4 @@
-package routing;
+package net.vizbits.gladiator.server.routing;
 
 import java.util.HashMap;
 import java.util.Map;

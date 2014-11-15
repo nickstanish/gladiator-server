@@ -1,5 +1,6 @@
 package net.vizbits.gladiator.server.response;
 
+import net.vizbits.gladiator.server.game.CharacterClass;
 import net.vizbits.gladiator.server.game.Gladiator;
 
 public class BattleStatusResponse {
@@ -11,6 +12,7 @@ public class BattleStatusResponse {
   public Double foe_maxhealth;
   public String me;
   public String foe;
+  public CharacterClass foe_class;
 
   public BattleStatusResponse() {
 
@@ -25,5 +27,6 @@ public class BattleStatusResponse {
     this.foe = foe.name;
     this.foe_health = foe.current_hp;
     this.foe_maxhealth = foe.max_hp;
+    this.foe_class = foe.character_class;
   }
 }
