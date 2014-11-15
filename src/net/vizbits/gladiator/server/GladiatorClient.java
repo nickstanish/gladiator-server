@@ -48,6 +48,8 @@ public class GladiatorClient {
   }
 
   private String validateUser(LoginRequest loginRequest) {
+    if (loginRequest.getUsername().trim().length() == 0)
+      return "Username is required";
     if (!loginRequest.getUsername().matches("^[\\w\\d]+$"))
       return "Usernames must be alphanumeric";
     if (!clientService.usernameAvailable(loginRequest.getUsername()))
