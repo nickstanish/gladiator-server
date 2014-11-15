@@ -145,6 +145,7 @@ public class GladiatorClient extends Thread {
   public void setGladiator(Gladiator gladiator) {
     this.gladiator = gladiator;
     gladiator.name = username;
+    gladiator.current_hp = gladiator.max_hp;
   }
 
   public Arena getArena() {

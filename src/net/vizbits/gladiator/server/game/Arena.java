@@ -46,4 +46,32 @@ public class Arena {
     }
 
   }
+
+  public Gladiator getFoe(Gladiator me) {
+    if (me.name.equals(username1)) {
+      return team2;
+    } else {
+      return team1;
+    }
+  }
+
+  public void applyAttack(Gladiator me, Gladiator foe, double data) {
+    if (data < 0) {
+      me.current_hp -= data;
+      if (me.current_hp > me.max_hp) {
+        me.current_hp = me.max_hp;
+      }
+    } else {
+      foe.current_hp -= data;
+    }
+
+  }
+
+  public void swapTurns() {
+    if (turn.equals(team1))
+      turn = team2;
+    else
+      turn = team1;
+
+  }
 }
