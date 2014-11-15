@@ -63,6 +63,7 @@ public class GladiatorClient extends Thread {
     return true;
   }
 
+
   @Override
   public void run() {
     if (!init())
