@@ -55,7 +55,7 @@ public class GladiatorServer {
   private void connectClient(Socket socket) {
     // TODO Auto-generated method stub
     try {
-      LogUtils.logError("Connection accepted from " + socket.getInetAddress());
+      LogUtils.logInfo("Connection accepted from " + socket.getInetAddress());
       GladiatorClient client = new GladiatorClient(socket);
     } catch (Exception e) {
       LogUtils.logError(e);

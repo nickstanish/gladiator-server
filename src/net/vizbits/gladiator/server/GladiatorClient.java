@@ -26,6 +26,8 @@ public class GladiatorClient {
     if (loginRequest != null && loginRequest.getUsername() != null) {
       LogUtils.logInfo(loginRequest.getUsername());
       JsonUtils.writeToSocket(out, new LoginResponse(true, null));
+    } else {
+      LogUtils.logInfo("Nothing read");
     }
     socket.close();
     // if (!validateUser(username, out)) {
