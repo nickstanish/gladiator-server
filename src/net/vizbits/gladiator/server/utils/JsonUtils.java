@@ -36,7 +36,7 @@ public class JsonUtils {
 
   public static void writeToSocket(PrintWriter out, Object object) {
     out.print(toJsonString(object));
-    out.print(Constants.HTTP_SEPARATOR);
+    out.print(Constants.HTTP_SEPARATOR_STRING);
     out.flush();
   }
 
@@ -52,7 +52,7 @@ public class JsonUtils {
         shift(search, curr);
         System.out.println((char) curr);
         if (curr == -1)
-          return null;
+          break;
         builder.append((char) curr);
 
       }
