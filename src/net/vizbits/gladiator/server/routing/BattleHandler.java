@@ -35,7 +35,7 @@ public class BattleHandler {
     }
 
     BattleStatusResponse response =
-        new BattleStatusResponse(arena.isReady(), arena.isMyTurn(me), me, foe);
+        new BattleStatusResponse(arena.isStarted(), arena.isMyTurn(me), arena, me, foe);
     JsonUtils.writeToSocket(gladiatorClient.getOut(), response);
   }
 }

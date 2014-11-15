@@ -24,6 +24,10 @@ public class Arena {
     started = true;
   }
 
+  public boolean isStarted() {
+    return started;
+  }
+
   public boolean isMyTurn(Gladiator gladiator) {
     if (!started)
       return false;
@@ -52,6 +56,14 @@ public class Arena {
       return team2;
     } else {
       return team1;
+    }
+  }
+
+  public String getFoeName(Gladiator me) {
+    if (me.name.equals(username1)) {
+      return username2;
+    } else {
+      return username1;
     }
   }
 
