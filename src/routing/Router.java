@@ -13,13 +13,18 @@ public class Router {
 
   private static Map<String, RouteAction> map;
 
-  public Router() {
+  private Router() {
+
+  }
+
+  private static void initSingleton() {
     map = new HashMap<String, RouteAction>();
     map.put(Constants.GAME_REQUEST, (a, b) -> gameRequest(a, b));
   }
 
   public static void route(String action, GladiatorClient gladiatorClient, BaseRequest baseRequest)
       throws ActionDoesNotExistException {
+    initSingleton();
     if (!map.containsKey(action))
       throw new ActionDoesNotExistException(action);
     else
