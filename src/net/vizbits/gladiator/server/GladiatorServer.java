@@ -4,17 +4,23 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.util.logging.Level;
+import java.util.HashMap;
+import java.util.Map;
 
+import net.vizbits.gladiator.server.service.ClientService;
 import net.vizbits.gladiator.server.utils.LogUtils;
 
 public class GladiatorServer {
   private final int port;
   private boolean isRunning;
+  private ClientService clientService;
+
 
   public GladiatorServer(int port) {
     this.port = port;
-    this.isRunning = false;
+    isRunning = false;
+    clientService = new ClientService();
+
     LogUtils.logInfo(Constants.STARTUP_TEXT);
 
   }
@@ -53,10 +59,10 @@ public class GladiatorServer {
   }
 
   private void connectClient(Socket socket) {
-    // TODO Auto-generated method stub
     try {
       LogUtils.logInfo("Connection accepted from " + socket.getInetAddress());
-      GladiatorClient client = new GladiatorClient(socket);
+      GladiatorClient client = new GladiatorClient(socket, clientService);
+
     } catch (Exception e) {
       LogUtils.logError(e);
     }
