@@ -26,6 +26,11 @@ public class BattleHandler {
 
   public static void BattleSequence(GladiatorClient gladiatorClient, BaseRequest baseRequest,
       String json) {
-
+    Gladiator gladiator = gladiatorClient.getGladiator();
+    Arena arena = gladiatorClient.getArena();
+    BattleStatusResponse response = new BattleStatusResponse();
+    response.game_ready = arena.isReady();
+    response.your_turn = arena.isMyTurn(gladiator);
+    JsonUtils.writeToSocket(gladiatorClient.getOut(), response);
   }
 }

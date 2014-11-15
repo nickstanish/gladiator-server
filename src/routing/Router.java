@@ -34,6 +34,8 @@ public class Router {
         (client, base, json) -> GameRequestHandler.waitRequest(client, base, json));
     map.put(Constants.CHARACTER_SELECTION,
         (client, base, json) -> BattleHandler.CharacterChoice(client, base, json));
+    map.put(Constants.BATTLE_REQUEST,
+        (client, base, json) -> BattleHandler.BattleSequence(client, base, json));
   }
 
   public static void route(String action, GladiatorClient gladiatorClient, BaseRequest baseRequest,

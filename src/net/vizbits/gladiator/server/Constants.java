@@ -12,4 +12,5 @@ public class Constants {
   public static final String GAME_REQUEST = "GameRequest";
   public static final String WAIT_REQUEST = "WaitRequest";
   public static final String CHARACTER_SELECTION = "NewCharacter";
+  public static final String BATTLE_REQUEST = "BattleRequest";
 }

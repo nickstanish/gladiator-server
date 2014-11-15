@@ -1,5 +1,7 @@
 package net.vizbits.gladiator.server.game;
 
+import net.vizbits.gladiator.server.utils.LogUtils;
+
 
 public class Arena {
   private Gladiator team1;
@@ -7,8 +9,12 @@ public class Arena {
   private Boolean ready;
   private Gladiator turn;
   private Boolean started;
+  private String username1;
+  private String username2;
 
-  public Arena() {
+  public Arena(String username1, String username2) {
+    this.username1 = username1;
+    this.username2 = username2;
     ready = false;
     started = false;
   }
@@ -32,7 +38,8 @@ public class Arena {
   }
 
   public synchronized void setGladiator(Gladiator gladiator) {
-    if (team1 == null) {
+    LogUtils.logInfo("Assing gladiator '" + gladiator.name + "' to arena");
+    if (gladiator.name.equals(username1)) {
       team1 = gladiator;
     } else {
       team2 = gladiator;
