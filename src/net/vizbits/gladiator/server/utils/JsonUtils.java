@@ -50,7 +50,6 @@ public class JsonUtils {
       while (!matches(search, Constants.HTTP_SEPARATOR)) {
         curr = in.read();
         shift(search, curr);
-        System.out.println((char) curr);
         if (curr == -1)
           break;
         builder.append((char) curr);

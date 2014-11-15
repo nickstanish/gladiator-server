@@ -6,19 +6,22 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import net.vizbits.gladiator.server.exceptions.AlreadyConnectedException;
 import net.vizbits.gladiator.server.request.LoginRequest;
 import net.vizbits.gladiator.server.response.LoginResponse;
 import net.vizbits.gladiator.server.service.ClientService;
 import net.vizbits.gladiator.server.utils.JsonUtils;
 import net.vizbits.gladiator.server.utils.LogUtils;
 
-public class GladiatorClient {
+public class GladiatorClient extends Thread {
   private Socket socket;
   private PrintWriter out;
   private BufferedReader in;
   private String username;
   private ClientService clientService;
   private WaitingQueue waitingQueue;
+  private ClientState clientState;
+  private boolean isAlive;
 
   public GladiatorClient(Socket socket, ClientService clientService, WaitingQueue waitingQueue)
       throws Exception {
@@ -28,23 +31,56 @@ public class GladiatorClient {
 
     out = new PrintWriter(socket.getOutputStream(), true);
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+    this.start();
+  }
+
+  private boolean init() {
     LoginRequest loginRequest = JsonUtils.readFromSocket(in, LoginRequest.class);
     if (loginRequest == null || loginRequest.getUsername() == null) {
       close();
-      return;
+      return false;
     }
     String validationMessage;
     if ((validationMessage = validateUser(loginRequest)) != null) {
       JsonUtils.writeToSocket(out, new LoginResponse(false, validationMessage));
       close();
-      return;
+      return false;
     }
     LogUtils.logInfo(loginRequest.getUsername());
-    JsonUtils.writeToSocket(out, new LoginResponse(true, null));
     this.username = loginRequest.getUsername();
-    clientService.addClient(this);
 
-    // this.start();
+
+    try {
+      clientService.addClient(this);
+    } catch (AlreadyConnectedException e) {
+      LogUtils.logError(e);
+      JsonUtils.writeToSocket(out, new LoginResponse(false, "Error connecting."));
+      return false;
+    }
+    JsonUtils.writeToSocket(out, new LoginResponse(true, null));
+    this.clientState = ClientState.Ready;
+    return true;
+  }
+
+  @Override
+  public void run() {
+    if (!init())
+      return;
+    isAlive = true;
+    while (isAlive) {
+      try {
+        String line = in.readLine(); // blocking
+        if (line == null)
+          continue;
+        System.out.println(line);
+        // do stuff
+
+      } catch (IOException e) {
+        break;
+      }
+    }
+    disconnect();
   }
 
   private String validateUser(LoginRequest loginRequest) {
