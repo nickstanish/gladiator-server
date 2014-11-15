@@ -5,6 +5,11 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import net.vizbits.gladiator.server.request.LoginRequest;
+import net.vizbits.gladiator.server.response.LoginResponse;
+import net.vizbits.gladiator.server.utils.JsonUtils;
+import net.vizbits.gladiator.server.utils.LogUtils;
+
 public class GladiatorClient {
   private Socket socket;
   private PrintWriter out;
@@ -17,7 +22,12 @@ public class GladiatorClient {
     // create output first
     out = new PrintWriter(socket.getOutputStream(), true);
     in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-    this.username = in.readLine();
+    LoginRequest loginRequest = JsonUtils.readFromSocket(in, LoginRequest.class);
+    if (loginRequest != null && loginRequest.getUsername() != null) {
+      LogUtils.logInfo(loginRequest.getUsername());
+      JsonUtils.writeToSocket(out, new LoginResponse(true, null));
+    }
+    socket.close();
     // if (!validateUser(username, out)) {
     // disconnect();
     // throw new Exception("Username taken");
