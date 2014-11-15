@@ -36,7 +36,8 @@ public class JsonUtils {
 
   public static void writeToSocket(PrintWriter out, Object object) {
     out.print(toJsonString(object));
-    out.print("\r\n");
+    out.print(Constants.HTTP_SEPARATOR);
+    out.flush();
   }
 
   public static <T> T readFromSocket(BufferedReader in, Class<T> type) {
