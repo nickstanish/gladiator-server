@@ -6,15 +6,17 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import routing.Router;
 import net.vizbits.gladiator.server.exceptions.ActionDoesNotExistException;
 import net.vizbits.gladiator.server.exceptions.AlreadyConnectedException;
+import net.vizbits.gladiator.server.game.Arena;
+import net.vizbits.gladiator.server.game.Gladiator;
 import net.vizbits.gladiator.server.request.BaseRequest;
 import net.vizbits.gladiator.server.request.LoginRequest;
 import net.vizbits.gladiator.server.response.LoginResponse;
 import net.vizbits.gladiator.server.service.ClientService;
 import net.vizbits.gladiator.server.utils.JsonUtils;
 import net.vizbits.gladiator.server.utils.LogUtils;
+import routing.Router;
 
 public class GladiatorClient extends Thread {
   private Socket socket;
@@ -25,6 +27,8 @@ public class GladiatorClient extends Thread {
   private WaitingQueue waitingQueue;
   private ClientState clientState;
   private boolean isAlive;
+  private Arena arena;
+  private Gladiator gladiator;
 
   public GladiatorClient(Socket socket, ClientService clientService, WaitingQueue waitingQueue)
       throws Exception {
@@ -63,6 +67,7 @@ public class GladiatorClient extends Thread {
     }
     JsonUtils.writeToSocket(out, new LoginResponse(true, null));
     this.clientState = ClientState.Ready;
+    this.gladiator = new Gladiator();
     return true;
   }
 
@@ -81,7 +86,7 @@ public class GladiatorClient extends Thread {
         Router.route(baseRequest.getAction(), this, baseRequest);
 
       } catch (ActionDoesNotExistException e) {
-        break;
+        continue;
       }
     }
     disconnect();
@@ -114,5 +119,37 @@ public class GladiatorClient extends Thread {
 
   public String getUsername() {
     return username;
+  }
+
+  public WaitingQueue getWaitingQueue() {
+    return waitingQueue;
+  }
+
+  public ClientService getClientService() {
+    return clientService;
+  }
+
+  public Gladiator getGladiator() {
+    return gladiator;
+  }
+
+  public Arena getArena() {
+    return arena;
+  }
+
+  public void setArena(Arena arena) {
+    this.arena = arena;
+  }
+
+  public PrintWriter getOut() {
+    return out;
+  }
+
+  public void setClientState(ClientState state) {
+    this.clientState = state;
+  }
+
+  public ClientState getClientState() {
+    return clientState;
   }
 }
