@@ -74,18 +74,24 @@ public class GladiatorClient extends Thread {
 
   @Override
   public void run() {
-    if (!init())
+    if (!init()) {
+      LogUtils.logInfo("Disconnecting");
       return;
+    }
     isAlive = true;
     while (isAlive) {
       try {
         BaseRequest baseRequest = JsonUtils.readFromSocket(in, BaseRequest.class);
-        if (baseRequest == null || baseRequest.getAction() == null)
+        if (baseRequest == null)
+          break;
+        if (baseRequest.getAction() == null)
           continue;
         // do stuff
         Router.route(baseRequest.getAction(), this, baseRequest);
 
       } catch (ActionDoesNotExistException e) {
+        LogUtils.logError(e);
+        LogUtils.logError("Action " + e.getAction() + " does not exist");
         continue;
       }
     }

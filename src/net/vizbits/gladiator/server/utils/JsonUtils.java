@@ -51,14 +51,15 @@ public class JsonUtils {
         curr = in.read();
         shift(search, curr);
         if (curr == -1)
-          break;
+          return null;
         builder.append((char) curr);
 
       }
     } catch (IOException e) {
       e.printStackTrace();
+      return null;
     }
-    System.out.println(builder.toString());
+    System.out.println("\"" + builder.toString() + "\"");
 
     object = getGson().fromJson(builder.toString().replaceFirst("\r\n\r\n$", ""), type);
     return object;
