@@ -6,7 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import routing.Router;
+import net.vizbits.gladiator.server.exceptions.ActionDoesNotExistException;
 import net.vizbits.gladiator.server.exceptions.AlreadyConnectedException;
+import net.vizbits.gladiator.server.request.BaseRequest;
 import net.vizbits.gladiator.server.request.LoginRequest;
 import net.vizbits.gladiator.server.response.LoginResponse;
 import net.vizbits.gladiator.server.service.ClientService;
@@ -71,13 +74,13 @@ public class GladiatorClient extends Thread {
     isAlive = true;
     while (isAlive) {
       try {
-        String line = in.readLine(); // blocking
-        if (line == null)
+        BaseRequest baseRequest = JsonUtils.readFromSocket(in, BaseRequest.class);
+        if (baseRequest == null || baseRequest.getAction() == null)
           continue;
-        System.out.println(line);
         // do stuff
+        Router.route(baseRequest.getAction(), this, baseRequest);
 
-      } catch (IOException e) {
+      } catch (ActionDoesNotExistException e) {
         break;
       }
     }

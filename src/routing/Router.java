@@ -18,7 +18,7 @@ public class Router {
     map.put(Constants.GAME_REQUEST, (a, b) -> gameRequest(a, b));
   }
 
-  public void route(String action, GladiatorClient gladiatorClient, BaseRequest baseRequest)
+  public static void route(String action, GladiatorClient gladiatorClient, BaseRequest baseRequest)
       throws ActionDoesNotExistException {
     if (!map.containsKey(action))
       throw new ActionDoesNotExistException(action);
