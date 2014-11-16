@@ -3,30 +3,23 @@ package net.vizbits.gladiator.server.routing;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.vizbits.gladiator.server.ClientState;
 import net.vizbits.gladiator.server.Constants;
 import net.vizbits.gladiator.server.GladiatorClient;
-import net.vizbits.gladiator.server.WaitingQueue;
 import net.vizbits.gladiator.server.exceptions.ActionDoesNotExistException;
-import net.vizbits.gladiator.server.exceptions.GladiatorMissingInActionException;
-import net.vizbits.gladiator.server.game.Arena;
-import net.vizbits.gladiator.server.game.Gladiator;
 import net.vizbits.gladiator.server.request.BaseRequest;
-import net.vizbits.gladiator.server.response.ConnectingResponse;
-import net.vizbits.gladiator.server.service.ClientService;
-import net.vizbits.gladiator.server.utils.JsonUtils;
-import net.vizbits.gladiator.server.utils.LogUtils;
 
 public class Router {
 
 
-  private static Map<String, RouteAction> map;
+  private static Map<String, RouteAction> map = null;
 
   private Router() {
 
   }
 
   private static void initSingleton() {
+    if (map != null)
+      return;
     map = new HashMap<String, RouteAction>();
     map.put(Constants.GAME_REQUEST,
         (client, base, json) -> GameRequestHandler.gameRequest(client, base, json));
