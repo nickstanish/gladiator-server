@@ -13,3 +13,19 @@ Features:
 * Custom routing of actions using a map of endpoints to lamdba handlers
 
 Uses only Java 8  and Gson library
+
+## Getting started
+Install the dependencies
+```
+mvn install
+```
+
+Run the server
+```
+mvn exec:java
+```
+
+Specify a port
+```
+mvn exec:java -Dexec.args="3000"
+```
